@@ -409,6 +409,9 @@ namespace DotNetty.Codecs
                 case 2:
                     frameLength = this.byteOrder == ByteOrder.BigEndian ? buffer.GetShort(offset) : buffer.GetShortLE(offset);
                     break;
+                case 3:
+                    frameLength = this.byteOrder == ByteOrder.BigEndian ? buffer.GetMedium(offset) : buffer.GetMediumLE(offset);
+                    break;
                 case 4:
                     frameLength = this.byteOrder == ByteOrder.BigEndian ? buffer.GetInt(offset) : buffer.GetIntLE(offset);
                     break;
