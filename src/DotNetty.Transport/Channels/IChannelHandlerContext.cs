@@ -36,18 +36,18 @@ namespace DotNetty.Transport.Channels
         bool Removed { get; }
 
         /// <summary>
-        ///     A {@link Channel} was registered to its {@link EventLoop}.
+        ///     A <see cref="IChannel"/> was registered to its <see cref="IEventLoop"/>.
         ///     This will result in having the {@link ChannelHandler#channelRegistered(ChannelHandlerContext)} method
         ///     called of the next {@link ChannelHandler} contained in the {@link ChannelPipeline} of the
-        ///     {@link Channel}.
+        ///     <see cref="IChannel"/>.
         /// </summary>
         IChannelHandlerContext FireChannelRegistered();
 
         /// <summary>
-        ///     A {@link Channel} was unregistered from its {@link EventLoop}.
+        ///     A <see cref="IChannel"/> was unregistered from its <see cref="IEventLoop"/>.
         ///     This will result in having the {@link ChannelHandler#channelUnregistered(ChannelHandlerContext)} method
         ///     called of the next {@link ChannelHandler} contained in the {@link ChannelPipeline} of the
-        ///     {@link Channel}.
+        ///     <see cref="IChannel"/>.
         /// </summary>
         IChannelHandlerContext FireChannelUnregistered();
 
@@ -80,7 +80,7 @@ namespace DotNetty.Transport.Channels
         ///     This will result in having the
         ///     {@link ChannelHandler#bind(ChannelHandlerContext, SocketAddress, ChannelPromise)} method
         ///     called of the next {@link ChannelHandler} contained in the {@link ChannelPipeline} of the
-        ///     {@link Channel}.
+        ///     <see cref="IChannel"/>.
         /// </summary>
         Task BindAsync(EndPoint localAddress);
 
@@ -95,7 +95,7 @@ namespace DotNetty.Transport.Channels
         ///     This will result in having the
         ///     {@link ChannelHandler#connect(ChannelHandlerContext, SocketAddress, SocketAddress, ChannelPromise)}
         ///     method called of the next {@link ChannelHandler} contained in the {@link ChannelPipeline} of the
-        ///     {@link Channel}.
+        ///     <see cref="IChannel"/>.
         /// </summary>
         Task ConnectAsync(EndPoint remoteAddress);
 
@@ -107,7 +107,7 @@ namespace DotNetty.Transport.Channels
         ///     This will result in having the
         ///     {@link ChannelHandler#connect(ChannelHandlerContext, SocketAddress, SocketAddress, ChannelPromise)}
         ///     method called of the next {@link ChannelHandler} contained in the {@link ChannelPipeline} of the
-        ///     {@link Channel}.
+        ///     <see cref="IChannel"/>.
         /// </summary>
         Task ConnectAsync(EndPoint remoteAddress, EndPoint localAddress);
 
@@ -118,7 +118,7 @@ namespace DotNetty.Transport.Channels
         ///     This will result in having the
         ///     {@link ChannelHandler#disconnect(ChannelHandlerContext, ChannelPromise)}
         ///     method called of the next {@link ChannelHandler} contained in the {@link ChannelPipeline} of the
-        ///     {@link Channel}.
+        ///     <see cref="IChannel"/>.
         /// </summary>
         Task DisconnectAsync();
 
@@ -133,7 +133,7 @@ namespace DotNetty.Transport.Channels
         ///     This will result in having the
         ///     {@link ChannelHandler#deregister(ChannelHandlerContext, ChannelPromise)}
         ///     method called of the next {@link ChannelHandler} contained in the {@link ChannelPipeline} of the
-        ///     {@link Channel}.
+        ///     <see cref="IChannel"/>.
         /// </summary>
         Task DeregisterAsync();
     }
