@@ -3,46 +3,42 @@
 
 namespace DotNetty.Handlers.Flow
 {
+    using DotNetty.Codecs;
     using DotNetty.Common;
     using DotNetty.Common.Internal;
     using DotNetty.Common.Internal.Logging;
     using DotNetty.Common.Utilities;
     using DotNetty.Transport.Channels;
 
-    /**
-     * The {@link FlowControlHandler} ensures that only one message per {@code read()} is sent downstream.
-     *
-     * Classes such as {@link ByteToMessageDecoder} or {@link MessageToByteEncoder} are free to emit as
-     * many events as they like for any given input. A channel's auto reading configuration doesn't usually
-     * apply in these scenarios. This is causing problems in downstream {@link ChannelHandler}s that would
-     * like to hold subsequent events while they're processing one event. It's a common problem with the
-     * {@code HttpObjectDecoder} that will very often fire a {@code HttpRequest} that is immediately followed
-     * by a {@code LastHttpContent} event.
-     *
-     * <pre>{@code
-     * ChannelPipeline pipeline = ...;
-     *
-     * pipeline.addLast(new HttpServerCodec());
-     * pipeline.addLast(new FlowControlHandler());
-     *
-     * pipeline.addLast(new MyExampleHandler());
-     *
-     * class MyExampleHandler extends ChannelInboundHandlerAdapter {
-     *   @Override
-     *   public void channelRead(IChannelHandlerContext ctx, Object msg) {
-     *     if (msg instanceof HttpRequest) {
-     *       ctx.channel().config().setAutoRead(false);
-     *
-     *       // The FlowControlHandler will hold any subsequent events that
-     *       // were emitted by HttpObjectDecoder until auto reading is turned
-     *       // back on or Channel#read() is being called.
-     *     }
-     *   }
-     * }
-     * }</pre>
-     *
-     * @see ChannelConfig#setAutoRead(bool)
-     */
+    /// <summary>
+    /// The <see cref="FlowControlHandler"/> ensures that only one message per <see cref="Read"/> is sent downstream.
+    /// Classes such as <see cref="ByteToMessageDecoder"/> or <see cref="MessageToByteEncoder{T}"/> are free to emit as
+    /// many events as they like for any given input. A channel's auto reading configuration doesn't usually
+    /// apply in these scenarios.This is causing problems in downstream <see cref="IChannelHandler"/>s that would
+    /// like to hold subsequent events while they're processing one event. It's a common problem with the
+    /// <c>HttpObjectDecoder</c> that will very often fire a <c>HttpRequest</c> that is immediately followed
+    /// by a <c>ILastHttpContent</c> event.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// IChannelPipeline pipeline = ...;
+    /// pipeline.AddLast(new HttpServerCodec());
+    /// pipeline.AddLast(new FlowControlHandler());
+    /// pipeline.AddLast(new MyExampleHandler());
+    /// 
+    /// class MyExampleHandler : SimpleChannelInboundHandler&lt;HttpRequest&gt;
+    /// {
+    ///     protected override void ChannelRead0(IChannelHandlerContext ctx, HttpRequest msg)
+    ///     {
+    ///         ctx.Channel.Configuration.SetOption(ChannelOption.AutoRead, false);
+    ///         // The FlowControlHandler will hold any subsequent events that
+    ///         // were emitted by HttpObjectDecoder until auto reading is turned
+    ///         // back on or IChannel.Read() is being called.
+    ///     }
+    /// }
+    /// </code>
+    /// </example>
+    /// <seealso cref="ChannelOption.AutoRead"/>
     public class FlowControlHandler : ChannelDuplexHandler
     {
         static readonly IInternalLogger Logger = InternalLoggerFactory.GetInstance<FlowControlHandler>();
@@ -67,15 +63,15 @@ namespace DotNetty.Handlers.Flow
             this.releaseMessages = releaseMessages;
         }
 
-        /**
-         * Determine if the underlying {@link Queue} is empty. This method exists for
-         * testing, debugging and inspection purposes and it is not Thread safe!
-         */
+        /// <summary>
+        /// Determine if the underlying <see cref="IQueue{T}"/> is empty.
+        /// This method exists for testing, debugging and inspection purposes and it is not Thread safe!
+        /// </summary>
         public bool IsQueueEmpty => this.queue.IsEmpty;
 
-        /**
-         * Releases all messages and destroys the {@link Queue}.
-         */
+        /// <summary>
+        /// Releases all messages and destroys the <see cref="IQueue{T}"/>.
+        /// </summary>
         void Destroy()
         {
             if (this.queue != null)
@@ -146,18 +142,19 @@ namespace DotNetty.Handlers.Flow
             // a new set of completion events is being produced.
         }
 
-        /**
-         * Dequeues one or many (or none) messages depending on the channel's auto
-         * reading state and returns the number of messages that were consumed from
-         * the internal queue.
-         *
-         * The {@code minConsume} argument is used to force {@code dequeue()} into
-         * consuming that number of messages regardless of the channel's auto
-         * reading configuration.
-         *
-         * @see #read(ChannelHandlerContext)
-         * @see #channelRead(ChannelHandlerContext, Object)
-         */
+        /// <summary>
+        /// Dequeues one or many (or none) messages depending on the channel's auto
+        /// reading state and returns the number of messages that were consumed from
+        /// the internal queue.
+        /// </summary>
+        /// <param name="ctx">The channel handler context.</param>
+        /// <param name="minConsume">
+        /// Used to force <see cref="Dequeue"/> into consuming that number of messages regardless of the channel's auto
+        /// reading configuration.
+        /// </param>
+        /// <returns>The number of dequeued messages.</returns>
+        /// <seealso cref="Read"/>
+        /// <seealso cref="ChannelRead"/>
         int Dequeue(IChannelHandlerContext ctx, int minConsume)
         {
             if (this.queue != null)
